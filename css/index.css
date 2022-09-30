@@ -1,0 +1,15 @@
+#btn_login {
+    margin-right: 25px;
+}
+
+body {
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+.form-horizontal .form-group {
+    margin-bottom: 20px;
+}
