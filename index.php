@@ -1,6 +1,9 @@
 <?php
 
 
+session_start();
+
+require_once "controllers/settings_controller.php";
 
 ?>
 
@@ -20,7 +23,16 @@
 <body class="flex-column d-flex">
     <?php include "./components/mainNavbar.php";?>
 
-    <?php echo file_get_contents("./components/mainForm.html");?>
+    <?php 
+    
+    if(!Setting::getClaimStatus()) {
+        echo file_get_contents("./components/mainForm.html");
+    }
+    else {
+        echo file_get_contents("./components/stopClaim.html");
+    }
+    
+    ?>
 
     <?php include "./components/mainFooter.php";?>
 

@@ -1,4 +1,4 @@
-#btn_login {
+#btn_login, #form_logout {
     margin-right: 25px;
 }
 
@@ -10,6 +10,10 @@ main {
     flex: 1;
 }
 
-.form-horizontal .form-group {
+#mainframe .form-group {
     margin-bottom: 20px;
+}
+
+.login-form {
+    padding-bottom: 85px;
 }

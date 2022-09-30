@@ -23,4 +23,6 @@ class DBControl {
     }
 }
 
+$DB = new DBControl(getenv("DB_HOST"), getenv("DB_USER"), getenv("DB_PASS"), getenv("DB_NAME"));
+
 ?>

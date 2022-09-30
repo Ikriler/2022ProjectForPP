@@ -1,3 +1,9 @@
+<?php
+
+session_start();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,7 +19,7 @@
 <body class="flex-column d-flex">
     <?php include "../components/mainNavbar.php"; ?>
 
-    <main></main>
+    <?php echo file_get_contents("../components/loginForm.html") ?>
 
     <?php include "../components/mainFooter.php"; ?>
 
