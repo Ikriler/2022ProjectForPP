@@ -5,7 +5,7 @@
                 <a href="../index.php" class="nav-link">Подача заявкок</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Списки абитуриентов</a>
+                <a href="../pages/abilist.php" class="nav-link">Списки абитуриентов</a>
             </li>
             <?php if (isset($_SESSION['auth']) && $_SESSION['auth'] === true) : ?>
                 <li class="nav-item">
@@ -19,6 +19,6 @@
             <button class="btn btn-danger">Выйти</button>
         </form>
     <?php else: ?>
-    <a href="./pages/loginPage.php"><button id="btn_login" class="btn btn-primary my-2 my-sm-0" type="submit">Войти</button></a>
+    <a href="../pages/loginPage.php"><button id="btn_login" class="btn btn-primary my-2 my-sm-0" type="submit">Войти</button></a>
     <?php endif;?>
 </nav>
