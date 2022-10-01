@@ -18,8 +18,8 @@ $_SESSION["frameFirstData"] = [
     "phone" => $_POST["phone"],
     "birthDay" => $_POST["birthDay"],
     "sex" => $_POST["sex"],
-    "goldGTO" => $_POST["goldGTO"],
-    "winner" => $_POST["winner"],
+    "goldGTO" => $_POST["goldGTO"] == 1 ? 1 : 0,
+    "winner" => $_POST["winner"] == 1 ? 1 : 0,
 ];
 
 if(isset($photo)) {

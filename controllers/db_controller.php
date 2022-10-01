@@ -1,6 +1,7 @@
 <?php
 
-class DBControl {
+class DBControl
+{
 
     private $_host;
     private $_user;
@@ -9,17 +10,111 @@ class DBControl {
 
     private $_connection;
 
-    private function connectDB() {
-        $_connection = mysqli_connect($this->_host, $this->_user, $this->_pass, $this->_name);
+    private function connectDB()
+    {
+        $this->_connection = mysqli_connect($this->_host, $this->_user, $this->_pass, $this->_name);
     }
 
-    function DBControl($host, $user, $pass, $name, $connection) {
+    function DBControl($host, $user, $pass, $name)
+    {
         $this->_host = $host;
         $this->_user = $user;
         $this->_name = $name;
         $this->_pass = $pass;
 
         $this->connectDB();
+    }
+
+
+    private $specialities = [
+        "1" => "Информационные системы и программирование",
+        "2" => "Сетевое и системное администрирование",
+        "3" => "Компьютерные системы и комплексы"
+    ];
+
+
+    function createAchievement($gold_gto, $olympic_medalist)
+    {
+        $query = "INSERT INTO achievements SET Gold_GTO='$gold_gto', Olympic_Medalist = '$olympic_medalist'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        return mysqli_insert_id($this->_connection);
+    }
+
+    function createCertificate($Number, $Issue_Date, $Educational_Institution, $Scan_Certificate, $Scan_Аpplication_Certificate, $GPA)
+    {
+        $query = "INSERT INTO certificates SET Number='$Number', Issue_Date='$Issue_Date', Educational_Institution='$Educational_Institution', Scan_Certificate='$Scan_Certificate', Scan_Аpplication_Certificate ='$Scan_Аpplication_Certificate', Certificate_Original='0', GPA='$GPA'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        return mysqli_insert_id($this->_connection);
+    }
+
+    function createPassport($Series, $Number, $Issue_Date, $Division_Code, $Issued, $Scan_First_Passport, $Scan_Second_Passport)
+    {
+        $query = "INSERT INTO passports SET Series='$Series', Number='$Number', Issue_Date='$Issue_Date', Division_Code='$Division_Code', Issued='$Issued', Scan_First_Passport='$Scan_First_Passport', Scan_Second_Passport='$Scan_Second_Passport'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        return mysqli_insert_id($this->_connection);
+    }
+
+    function getStatusByName($statusName) {
+        $query = "SELECT * FROM statuses WHERE name='$statusName' LIMIT 1";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        $status = mysqli_fetch_assoc($result);
+        return $status;
+    }
+
+    function createApplicantsSpecialtie($Applicant_ID, $Speciality_ID) {
+        $query = "INSERT INTO applicants_specialties SET Applicant_ID='$Applicant_ID', Speciality_ID='$Speciality_ID'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        return mysqli_insert_id($this->_connection);
+    }
+
+    function getSpecialityByName($specName) {
+        $query = "SELECT * FROM specialties WHERE Name='$specName' LIMIT 1";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        $speciality = mysqli_fetch_assoc($result);
+        return $speciality;
+    }
+
+
+    function createApplicant($firstFrame, $secondFrame, $thirdFrame)
+    {
+        $ahievement_id = $this->createAchievement($firstFrame['goldGTO'], $firstFrame['winner']);
+
+        $passport_id = $this->createPassport($secondFrame['pass_seria'], $secondFrame['pass_number'], $secondFrame['date_out'], $secondFrame['podrazdel_number'], $secondFrame['who_otdal'], $secondFrame['first_scan'], $secondFrame['second_scan']);
+
+        $certificate_id = $this->createCertificate($thirdFrame['at_number'], $thirdFrame['at_date'], $thirdFrame['at_name'], $thirdFrame['at_scan'], $thirdFrame['at_priloj_scan'], $thirdFrame['middle_number']);
+
+        $a_Surname = $firstFrame['surname'];
+        $a_Name = $firstFrame['surname'];
+        $a_Patronymic = $firstFrame['patronymic'];
+        $a_Sex = $firstFrame['sex'] == "1" ? "М" : "Ж";
+        $a_Birth_Date = $firstFrame['birthDay'];
+        $a_Email = $firstFrame['email'];
+        $a_Phone_Number = $firstFrame['phone'];
+        $a_Photo = $firstFrame['photoFace'];
+        
+        $id_status = $this->getStatusByName("В обработке")['ID_Status'];
+
+        $query = "INSERT INTO applicants SET Surname='$a_Surname', Name='$a_Name', Patronymic='$a_Patronymic', Sex='$a_Sex', Birth_Date='$a_Birth_Date', Email='$a_Email', Phone_Number='$a_Phone_Number', Photo='$a_Photo', Passport_ID='$passport_id', Achievement_ID='$ahievement_id', Certificate_ID='$certificate_id', id_status='$id_status'";
+
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+
+        $applicant_id = mysqli_insert_id($this->_connection);
+
+        if(isset($thirdFrame['spec'])) {
+            if(is_array($thirdFrame['spec'])) {
+                foreach($thirdFrame['spec'] as $checkNum) {
+                    $spec_id = $this->getSpecialityByName($this->specialities[$checkNum])['ID_Speciality'];
+
+                    $this->createApplicantsSpecialtie($applicant_id, $spec_id);
+                }
+            }
+            else {
+                $spec_id = $this->getSpecialityByName($this->specialities[$thirdFrame['spec']])['ID_Speciality'];
+
+                $this->createApplicantsSpecialtie($applicant_id, $spec_id);
+            }
+        }
+
     }
 }
 

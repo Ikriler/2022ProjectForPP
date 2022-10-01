@@ -1,4 +1,4 @@
 SetEnv DB_HOST "localhost"
-SetEnv DB_NAME "enrolleeclaimdb"
+SetEnv DB_NAME "selcomdb"
 SetEnv DB_USER "root"
 SetEnv DB_PASS ""

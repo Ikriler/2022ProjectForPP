@@ -12,6 +12,7 @@ if(isset($_POST["submit"])) {
 }
 
 require_once "../controllers/randomizer.php";
+require_once "../controllers/db_controller.php";
 
 $root = $_SERVER["DOCUMENT_ROOT"];
 
@@ -53,6 +54,10 @@ if(isset($_FILES['at_priloj_scan']) && $_FILES['at_priloj_scan']['name'] != '') 
     $newFile = $root . '/images/docs/'.random_string(10).".".$ext;
     $result = move_uploaded_file($tmpFile, $newFile);   
     $_SESSION["frameThirdData"]["at_priloj_scan"] = $newFile; 
+}
+
+if($_SESSION['frame'] == "3") {
+    $DB->createApplicant($_SESSION['frameFirstData'], $_SESSION['frameSecondData'], $_SESSION['frameThirdData']);
 }
 
 header("Location: ../index.php");
