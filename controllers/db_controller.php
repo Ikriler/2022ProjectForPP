@@ -84,7 +84,7 @@ class DBControl
         $certificate_id = $this->createCertificate($thirdFrame['at_number'], $thirdFrame['at_date'], $thirdFrame['at_name'], $thirdFrame['at_scan'], $thirdFrame['at_priloj_scan'], $thirdFrame['middle_number']);
 
         $a_Surname = $firstFrame['surname'];
-        $a_Name = $firstFrame['surname'];
+        $a_Name = $firstFrame['name'];
         $a_Patronymic = $firstFrame['patronymic'];
         $a_Sex = $firstFrame['sex'] == "1" ? "М" : "Ж";
         $a_Birth_Date = $firstFrame['birthDay'];
@@ -115,6 +115,54 @@ class DBControl
             }
         }
 
+    }
+
+    function updateApplicantStatus($id_applicant, $status_name) {
+        $id_status = $this->getStatusByName($status_name)['ID_Status'];
+        $query = "UPDATE applicants SET id_status='$id_status' WHERE ID_Applicant='$id_applicant'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+    }
+
+
+    function getApplicantsForTable() {
+        $statusCompleteId = $this->getStatusByName("Конкурс")['ID_Status'];
+        $query = "SELECT applicants.*, certificates.GPA FROM applicants LEFT JOIN certificates ON applicants.Certificate_ID = certificates.ID_Certificate WHERE applicants.id_status='$statusCompleteId'";
+
+        if(isset($_GET["sortBy"])) {
+            $query .= " ORDER BY {$_GET["sortBy"]}";
+            if(isset($_GET["direction"])) {
+                $query .= " {$_GET["direction"]}";
+            }
+        }
+        else {
+            $query .= " ORDER BY GPA DESC";
+        }
+
+
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        return $data;
+    }
+
+
+    
+    function getApplicantsForTableAdmin() {
+        $query = "SELECT applicants.*, certificates.GPA, statuses.name as status FROM applicants LEFT JOIN certificates ON applicants.Certificate_ID = certificates.ID_Certificate LEFT JOIN statuses ON statuses.ID_Status = applicants.id_status";
+
+        if(isset($_GET["sortBy"])) {
+            $query .= " ORDER BY {$_GET["sortBy"]}";
+            if(isset($_GET["direction"])) {
+                $query .= " {$_GET["direction"]}";
+            }
+        }
+        else {
+            $query .= " ORDER BY GPA DESC";
+        }
+
+
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        return $data;
     }
 }
 

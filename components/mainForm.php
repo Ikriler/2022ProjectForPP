@@ -25,6 +25,7 @@
       <div class="col-sm-11">
         <input type="email" class="form-control" name="email" value="<?= getFillOrEmptyString("email", "frameFirstData") ?>" />
       </div>
+      <!-- <span class="error text-danger">Some Errors related to something</span> -->
     </div>
     <div class="form-group row">
       <label for="phone" class="col-sm-2 col-form-label">Номер телефона:</label>

@@ -54,28 +54,95 @@ $envStatus = Setting::getClaimStatus();
 
     <script src="../bootstrap/bootstrap.js"></script>
     <script>
-            data = [
-                { 'ID': 1, 'Name': 'Hristo Stoichkov', 'PlaceOfBirth': 'Plovdiv, Bulgaria' },
-                { 'ID': 2, 'Name': 'Ronaldo Luís Nazário de Lima', 'PlaceOfBirth': 'Rio de Janeiro, Brazil' },
-                { 'ID': 3, 'Name': 'David Platt', 'PlaceOfBirth': 'Chadderton, Lancashire, England' },
-                { 'ID': 4, 'Name': 'Manuel Neuer', 'PlaceOfBirth': 'Gelsenkirchen, West Germany' },
-                { 'ID': 5, 'Name': 'James Rodríguez', 'PlaceOfBirth': 'Cúcuta, Colombia' },
-                { 'ID': 6, 'Name': 'Dimitar Berbatov', 'PlaceOfBirth': 'Blagoevgrad, Bulgaria' }
-            ];
         $(document).ready(function() {
             grids = $('#claims').grid({
-                primaryKey: 'ID',
-                dataSource: data,
-                columns: [
-                    { field: 'ID', width: 56 },
-                    { field: 'Name', sortable: true },
-                    { field: 'PlaceOfBirth', title: 'Place Of Birth', sortable: true },
+                primaryKey: 'ID_Applicant',
+                dataSource: "/actions/getApplicantsForAdmin.php",
+                //uiLibrary: "bootstrap",
+                columns: [{
+                        field: 'ID_Applicant',
+                        width: 56,
+                        hidden: true
+                    },
+                    {
+                        field: 'Surname',
+                        sortable: true,
+                        title: "Фамилия"
+                    },
+                    {
+                        field: 'Name',
+                        sortable: true,
+                        title: "Имя"
+                    },
+                    {
+                        field: 'Patronymic',
+                        sortable: true,
+                        title: "Отчество"
+                    },
+                    {
+                        field: 'GPA',
+                        sortable: true,
+                        title: "Средний балл",
+                        type: "float"
+                    },
+                    {
+                        field: 'status',
+                        sortable: true,
+                        title: "Статус",
+                    },
+                    {
+                        title: 'Конкурс',
+                        field: 'status',
+                        type: 'text',
+                        renderer: (value) => {
+                            strForBtn = "";
+
+                            switch (value) {
+                                case "Отклонен":
+                                case "В обработке":
+                                    strForBtn = "Отправить на конкурс";
+                                    break;
+                                case "Конкурс":
+                                    strForBtn = "снять с конкурса";
+                                    break;
+                                default:
+                                    strForBtn = "снять с конкурса";
+                            }
+                            return "<button class='btn btn-primary'>" + strForBtn + "</button>";
+                        },
+                        icon: 'glyphicon glyphicon-plus',
+                        events: {
+                            'click': updateStatus
+                        }
+                    },
                 ],
                 pager: {
-                    limit: 5,
-                    sizes: [2, 5, 10, 20]
-                }
+                    limit: 7,
+                    sizes: false
+                },
             });
+
+            function updateStatus(e) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-Token': "{{ csrf_token() }}"
+                    }
+                });
+                if (confirm('Вы уверены?')) {
+                    var record = {
+                        ID_Applicant: e.data.record.ID_Applicant,
+                        status: e.data.record.status,
+                    };
+                    $.ajax({
+                        url: '/actions/updateStatusApplicant.php',
+                        data: record,
+                        method: 'POST'
+                    })
+                    grids.reload();
+                }
+            };
+
+            $("span:contains('Rows per page:')").css("display", "none");
         });
     </script>
 </body>

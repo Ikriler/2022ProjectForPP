@@ -5,7 +5,6 @@ session_start();
 
 require_once "../controllers/settings_controller.php";
 
-
 ?>
 
 <!DOCTYPE html>
@@ -23,6 +22,8 @@ require_once "../controllers/settings_controller.php";
     <script src="js/jquery.ui.autocomplete.scroll.min.js" type="text/javascript"></script>
     <link rel="icon" type="icon/png" href="../images/decoration/school.png">
     <link rel="stylesheet" href="../css/index.css">
+
+
     <title>Списки</title>
 </head>
 
@@ -39,28 +40,43 @@ require_once "../controllers/settings_controller.php";
 
     <script src="../bootstrap/bootstrap.js"></script>
     <script>
-            data = [
-                { 'ID': 1, 'Name': 'Hristo Stoichkov', 'PlaceOfBirth': 'Plovdiv, Bulgaria' },
-                { 'ID': 2, 'Name': 'Ronaldo Luís Nazário de Lima', 'PlaceOfBirth': 'Rio de Janeiro, Brazil' },
-                { 'ID': 3, 'Name': 'David Platt', 'PlaceOfBirth': 'Chadderton, Lancashire, England' },
-                { 'ID': 4, 'Name': 'Manuel Neuer', 'PlaceOfBirth': 'Gelsenkirchen, West Germany' },
-                { 'ID': 5, 'Name': 'James Rodríguez', 'PlaceOfBirth': 'Cúcuta, Colombia' },
-                { 'ID': 6, 'Name': 'Dimitar Berbatov', 'PlaceOfBirth': 'Blagoevgrad, Bulgaria' }
-            ];
         $(document).ready(function() {
             grids = $('#claims').grid({
-                primaryKey: 'ID',
-                dataSource: data,
-                columns: [
-                    { field: 'ID', width: 56 },
-                    { field: 'Name', sortable: true },
-                    { field: 'PlaceOfBirth', title: 'Place Of Birth', sortable: true },
+                primaryKey: 'ID_Applicant',
+                dataSource: "/actions/getApplicants.php",
+                columns: [{
+                        field: 'ID_Applicant',
+                        width: 56,
+                        hidden: true
+                    },
+                    {
+                        field: 'Surname',
+                        sortable: true,
+                        title: "Фамилия"
+                    },
+                    {
+                        field: 'Name',
+                        sortable: true,
+                        title: "Имя"
+                    },
+                    {
+                        field: 'Patronymic',
+                        sortable: true,
+                        title: "Отчество"
+                    },
+                    {
+                        field: 'GPA',
+                        sortable: true,
+                        title: "Средний балл",
+                        type: "float"
+                    },
                 ],
                 pager: {
-                    limit: 5,
-                    sizes: [2, 5, 10, 20]
-                }
+                    limit: 15,
+                    sizes: false
+                },
             });
+            $("span:contains('Rows per page:')").css("display", "none");
         });
     </script>
 </body>
