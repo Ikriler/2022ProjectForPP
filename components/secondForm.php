@@ -17,6 +17,7 @@
       <div class="col-sm-4">
         <input type="number" class="form-control" name="pass_number"  value="<?= getFillOrEmptyString("pass_number", "frameSecondData") ?>"/>
       </div>
+      <span class="error text-danger"><?=getErrorMessage("pass_seria")?></span>
     </div>
 
     <div class="form-group row">
@@ -24,6 +25,7 @@
       <div class="col-sm-10">
         <input type="date" class="form-control" name="date_out" value="<?= getFillOrEmptyString("date_out", "frameSecondData") ?>"/>
       </div>
+      <span class="error text-danger"><?=getErrorMessage("date_out")?></span>
     </div>
 
     <div class="form-group row">
@@ -31,6 +33,7 @@
       <div class="col-sm-10">
         <input type="text" class="form-control" name="who_otdal" value="<?= getFillOrEmptyString("who_otdal", "frameSecondData") ?>"/>
       </div>
+      <span class="error text-danger"><?=getErrorMessage("who_otdal")?></span>
     </div>
 
     <div class="form-group row">
@@ -38,6 +41,7 @@
       <div class="col-sm-10">
         <input type="number" class="form-control" name="podrazdel_number" value="<?=getFillOrEmptyString("podrazdel_number", "frameSecondData") ?>"/>
       </div>
+      <span class="error text-danger"><?=getErrorMessage("podrazdel_number")?></span>
     </div>
 
     <div class="form-group row">
@@ -45,6 +49,7 @@
       <div class="col-sm-9">
         <input class="form-control form-control-sm" id="formFileSm2" type="file" name="first_scan" accept=".png,.jpg,.jpeg"/>
       </div>
+      <span class="error text-danger"><?=getErrorMessage("first_scan")?></span>
     </div>
 
     <div class="form-group row">
@@ -52,6 +57,7 @@
       <div class="col-sm-9">
         <input class="form-control form-control-sm" id="formFileSm1" type="file" name="second_scan" accept=".png,.jpg,.jpeg"/>
       </div>
+      <span class="error text-danger"><?=getErrorMessage("second_scan")?></span>
     </div>
 
 

@@ -228,6 +228,16 @@ class DBControl
         }
         return true;
     }
+
+    function checkHasPassport($pass_seria, $pass_number) {
+        $query = "SELECT * FROM passports WHERE Series='$pass_seria' AND Number='$pass_number'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        if(count($data) == 0) {
+            return false;
+        }
+        return true;
+    }
 }
 
 $DB = new DBControl(getenv("DB_HOST"), getenv("DB_USER"), getenv("DB_PASS"), getenv("DB_NAME"));
