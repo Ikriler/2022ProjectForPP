@@ -17,6 +17,7 @@
       <div class="col-sm-3">
         <input type="date" class="form-control" name="at_date" value="<?= getFillOrEmptyString("at_date", "frameThirdData") ?>"/>
       </div>
+      <span class="error text-danger"><?=getErrorMessage("at_number")?></span>
     </div>
 
     <div class="form-group row">

@@ -11,6 +11,10 @@ if(isset($_POST["submit"])) {
     }
 }
 
+function turnFrame() {
+    $_SESSION["frame"] = "2";
+}
+
 require_once "../controllers/randomizer.php";
 require_once "../controllers/db_controller.php";
 
@@ -56,9 +60,29 @@ if(isset($_FILES['at_priloj_scan']) && $_FILES['at_priloj_scan']['name'] != '') 
     $_SESSION["frameThirdData"]["at_priloj_scan"] = $newFile; 
 }
 
+//validation
+
+//at_number
+
+if($_SESSION['frame'] != "1") {
+    $at_number = trim($_POST['at_number']);
+    if($at_number == "") {
+        $_SESSION['errors']['at_number'] = "Поле не должно быть пустым";
+        turnFrame();
+    }
+    if($DB->checkHasCertificateNumber($at_number)) {
+        $_SESSION['errors']['at_number'] = "Данный номер аттестата уже существует";
+        turnFrame();
+    }
+}
+
+//end_validation
+
 if($_SESSION['frame'] == "3") {
     $DB->createApplicant($_SESSION['frameFirstData'], $_SESSION['frameSecondData'], $_SESSION['frameThirdData']);
 }
+
+
 
 header("Location: ../index.php");
 

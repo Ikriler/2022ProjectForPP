@@ -29,10 +29,23 @@ require_once "../controllers/settings_controller.php";
 
 <body class="flex-column d-flex">
     <?php include "../components/mainNavbar.php"; ?>
-    <main class="container d-flex flex-column algin-items-center">
-
-        <table id="claims">
-        </table>
+    <main class="container d-flex flex-column algin-items-center justify-content-center">
+        <div class="from-horizontal abilist-form">
+            <div class="form-group row d-flex flex-row div-bottom-mg">
+                <label for="" class="col-sm-1 col-form-label">ФИО:</label>
+                <div class="col-sm-3">
+                    <input id="search_text" type="text" class="form-control" name="">
+                </div>
+                <div class="col-sm-1">
+                    <buttion id="search_btn" type="button" class="btn btn-primary" value="Поиск">Поиск</buttion>
+                </div>
+                <div class="col-sm-1">
+                    <buttion id="clear_btn" type="button" class="btn btn-primary" value="Очистить">Очистить</buttion>
+                </div>
+            </div>
+            <table id="claims">
+            </table>
+        </div>
 
     </main>
 
@@ -45,38 +58,38 @@ require_once "../controllers/settings_controller.php";
                 primaryKey: 'ID_Applicant',
                 dataSource: "/actions/getApplicants.php",
                 columns: [{
-                        field: 'ID_Applicant',
-                        width: 56,
-                        hidden: true
+                        field: 'row_number',
+                        title: "Место в конкурсе",
                     },
                     {
-                        field: 'Surname',
-                        sortable: true,
-                        title: "Фамилия"
-                    },
-                    {
-                        field: 'Name',
-                        sortable: true,
-                        title: "Имя"
-                    },
-                    {
-                        field: 'Patronymic',
-                        sortable: true,
-                        title: "Отчество"
+                        field: 'FIO',
+                        title: "ФИО"
                     },
                     {
                         field: 'GPA',
-                        sortable: true,
                         title: "Средний балл",
                         type: "float"
                     },
                 ],
                 pager: {
-                    limit: 15,
+                    limit: 7,
                     sizes: false
                 },
             });
             $("span:contains('Rows per page:')").css("display", "none");
+            $("#search_btn").on('click', function() {
+                grids.reload({
+                    page: 1,
+                    FIO: $('#search_text').val()
+                });
+            });
+            $("#clear_btn").on('click', function() {
+                $("#search_text").val('');
+                grids.reload({
+                    page: 1,
+                    FIO: ''
+                });
+            });
         });
     </script>
 </body>

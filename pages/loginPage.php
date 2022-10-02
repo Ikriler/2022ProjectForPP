@@ -20,7 +20,7 @@ session_start();
 <body class="flex-column d-flex">
     <?php include "../components/mainNavbar.php"; ?>
 
-    <?php echo file_get_contents("../components/loginForm.html") ?>
+    <?php include"../components/loginForm.php"; ?>
 
     <?php include "../components/mainFooter.php"; ?>
 

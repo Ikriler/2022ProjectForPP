@@ -8,6 +8,8 @@ require_once "controllers/settings_controller.php";
 
 require_once "controllers/filler.php";
 
+require_once "controllers/validator_controller.php";
+
 ?>
 
 <!DOCTYPE html>

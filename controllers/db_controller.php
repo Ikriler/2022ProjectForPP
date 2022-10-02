@@ -126,7 +126,11 @@ class DBControl
 
     function getApplicantsForTable() {
         $statusCompleteId = $this->getStatusByName("Конкурс")['ID_Status'];
-        $query = "SELECT applicants.*, certificates.GPA FROM applicants LEFT JOIN certificates ON applicants.Certificate_ID = certificates.ID_Certificate WHERE applicants.id_status='$statusCompleteId'";
+        $query = "SELECT applicants.*, CONCAT(applicants.Surname, ' ', applicants.Name, ' ', applicants.Patronymic) as FIO, certificates.GPA FROM applicants LEFT JOIN certificates ON applicants.Certificate_ID = certificates.ID_Certificate WHERE applicants.id_status='$statusCompleteId'";
+
+        if(isset($_GET['FIO'])) {
+            $query .= " AND CONCAT(applicants.Surname, ' ', applicants.Name, ' ', applicants.Patronymic) LIKE '%{$_GET['FIO']}%'";
+        }
 
         if(isset($_GET["sortBy"])) {
             $query .= " ORDER BY {$_GET["sortBy"]}";
@@ -141,6 +145,24 @@ class DBControl
 
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
         for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+
+        //Номер в конкурсе
+
+        $query2 =  "SELECT applicants.*, CONCAT(applicants.Surname, ' ', applicants.Name, ' ', applicants.Patronymic) as FIO, certificates.GPA FROM applicants LEFT JOIN certificates ON applicants.Certificate_ID = certificates.ID_Certificate WHERE applicants.id_status='$statusCompleteId' ORDER BY GPA DESC";
+
+        $result2 = mysqli_query($this->_connection, $query2) or die(mysqli_error($this->_connection));
+        for($data2 = []; $row2 = mysqli_fetch_assoc($result2); $data2[] = $row2);
+
+        for($i = 0; $i < count($data); $i++) {
+            for($j = 0; $j < count($data2); $j++) {
+                if($data[$i]['ID_Applicant'] == $data2[$j]['ID_Applicant']) {
+                    $data[$i]['row_number'] = $j + 1;
+                }
+            }
+        }
+
+        //Номер в конкурсе;
+
         return $data;
     }
 
@@ -163,6 +185,48 @@ class DBControl
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
         for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
         return $data;
+    }
+
+
+    function checkAuth($login, $password) {
+        $query = "SELECT * FROM employees WHERE Login='$login' AND Password='$password'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        if(count($data) == 0) {
+            return false;
+        }
+        return true;
+    }
+
+
+    function checkHasEmail($email) {
+        $query = "SELECT * FROM applicants WHERE email='$email'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        if(count($data) == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    function checkHasPhone($phone) {
+        $query = "SELECT * FROM applicants WHERE Phone_Number='$phone'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        if(count($data) == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    function checkHasCertificateNumber($number) {
+        $query = "SELECT * FROM certificates WHERE Number='$number'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        if(count($data) == 0) {
+            return false;
+        }
+        return true;
     }
 }
 

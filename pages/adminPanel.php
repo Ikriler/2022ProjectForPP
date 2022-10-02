@@ -92,6 +92,7 @@ $envStatus = Setting::getClaimStatus();
                     },
                     {
                         title: 'Конкурс',
+                        width: 250,
                         field: 'status',
                         type: 'text',
                         renderer: (value) => {
@@ -103,12 +104,12 @@ $envStatus = Setting::getClaimStatus();
                                     strForBtn = "Отправить на конкурс";
                                     break;
                                 case "Конкурс":
-                                    strForBtn = "снять с конкурса";
+                                    strForBtn = "Cнять с конкурса";
                                     break;
                                 default:
-                                    strForBtn = "снять с конкурса";
+                                    strForBtn = "Cнять с конкурса";
                             }
-                            return "<button class='btn btn-primary'>" + strForBtn + "</button>";
+                            return "<button class='btn btn-primary' style='white-space: nowrap; width: 184px;'>" + strForBtn + "</button>";
                         },
                         icon: 'glyphicon glyphicon-plus',
                         events: {

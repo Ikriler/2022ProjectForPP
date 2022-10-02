@@ -18,6 +18,10 @@ main {
     padding-bottom: 85px;
 }
 
+.div-bottom-mg {
+  margin-bottom: 20px;
+}
+
 
 .file-upload {
     background-color: #ffffff;

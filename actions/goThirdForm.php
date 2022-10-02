@@ -12,6 +12,11 @@ if(isset($_POST["submit"])) {
 }
 
 require_once "../controllers/randomizer.php";
+require_once "../controllers/db_controller.php";
+
+function turnFrame() {
+    $_SESSION["frame"] = "1";
+}
 
 $root = $_SERVER["DOCUMENT_ROOT"];
 
@@ -53,6 +58,10 @@ if(isset($_FILES['second_scan']) && $_FILES['second_scan']['name'] != '') {
     $newFile = $root . '/images/docs/'.random_string(10).".".$ext;
     $result = move_uploaded_file($tmpFile, $newFile);   
     $_SESSION["frameSecondData"]["second_scan"] = $newFile; 
+}
+
+if($_SESSION['frame'] != "0") {
+
 }
 
 header("Location: ../index.php");

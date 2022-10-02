@@ -1,10 +1,11 @@
 <?php
 //echo $_SESSION['frameFirstData']['photoFace'];
+
 ?>
 
 <main class="container d-flex flex-column align-items-center">
   <div class="display-4 p-4">Подача заявки на поступление</div>
-  <form action="actions/goSecondForm.php" class="form-horizontal" role="form" id="mainframe" method="post" enctype="multipart/form-data" name="firstForm">
+  <form action="actions/goSecondForm.php" class="form-horizontal col-sm-8" role="form" id="mainframe" method="post" enctype="multipart/form-data" name="firstForm">
     <p class="text-center fs-3 p-1">Основная информация</p>
     <div class="form-group row d-flex flex-row align-items-right g-10">
       <label for="name" class="col-sm-1 col-form-label">Имя:</label>
@@ -19,25 +20,28 @@
       <div class="col-sm-3">
         <input type="text" class="form-control" name="patronymic" value="<?= getFillOrEmptyString("patronymic", "frameFirstData") ?>" />
       </div>
+      <span class="error text-danger"><?=getErrorMessage("name")?></span>
     </div>
     <div class="form-group row">
       <label for="email" class="col-sm-1 col-form-label">Email:</label>
       <div class="col-sm-11">
         <input type="email" class="form-control" name="email" value="<?= getFillOrEmptyString("email", "frameFirstData") ?>" />
       </div>
-      <!-- <span class="error text-danger">Some Errors related to something</span> -->
+      <span class="error text-danger"><?=getErrorMessage("email")?></span>
     </div>
     <div class="form-group row">
-      <label for="phone" class="col-sm-2 col-form-label">Номер телефона:</label>
-      <div class="col-sm-10">
-        <input type="tel" class="form-control" name="phone" value="<?= getFillOrEmptyString("phone", "frameFirstData") ?>" />
+      <label for="phone" class="col-sm-3 col-form-label">Номер телефона:</label>
+      <div class="col-sm-9">
+        <input type="number" class="form-control" name="phone" value="<?= getFillOrEmptyString("phone", "frameFirstData") ?>" />
       </div>
+      <span class="error text-danger"><?=getErrorMessage("phone")?></span>
     </div>
     <div class="form-group row">
       <label for="birthDay" class="col-sm-2 col-form-label">Дата рождения:</label>
       <div class="col-sm-10">
         <input type="date" class="form-control" name="birthDay" value="<?= getFillOrEmptyString("birthDay", "frameFirstData") ?>" />
       </div>
+      <span class="error text-danger"><?=getErrorMessage("birthDay")?></span>
     </div>
     <div class="form-group row">
       <label for="sex" class="col-sm-2 col-form-label">Пол:</label>
@@ -54,6 +58,7 @@
       <div class="col-sm-9">
         <input accept=".png,.jpg,.jpeg" class="form-control form-control-sm" id="formFileSm" type="file" name="photoFace" />
       </div>
+      <span class="error text-danger"><?=getErrorMessage("photoFace")?></span>
     </div>
     <!--Конец загрузка фото абитуриента-->
     <!-- Личные достижения-->
