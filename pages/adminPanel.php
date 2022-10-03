@@ -221,7 +221,7 @@ $envStatus = Setting::getClaimStatus();
                     },
                     {
                         title: 'Отклонить',
-                        width: 250,
+                        width: 150,
                         field: 'status',
                         type: 'text',
                         renderer: (value) => {
@@ -230,7 +230,7 @@ $envStatus = Setting::getClaimStatus();
                                 style = "disabled";
                             }
 
-                            return "<button class='btn btn-danger' " + style + " style='white-space: nowrap; width: 184px;'>Отклонить</button>";
+                            return "<button class='btn btn-danger' " + style + " style='white-space: nowrap;'>Отклонить</button>";
                         },
                         icon: 'glyphicon glyphicon-plus',
                         events: {
@@ -239,15 +239,28 @@ $envStatus = Setting::getClaimStatus();
                     },
                     {
                         title: 'Подробнее',
-                        width: 250,
+                        width: 150,
                         field: 'status',
                         type: 'text',
                         renderer: (value) => {
-                            return "<button class='btn btn-info' style='white-space: nowrap; color:white; width: 184px;'>Подробнее</button>";
+                            return "<button class='btn btn-info' style='white-space: nowrap; color:white; '>Подробнее</button>";
                         },
                         icon: 'glyphicon glyphicon-plus',
                         events: {
                             'click': showDialog
+                        }
+                    },
+                    {
+                        title: 'Удалить',
+                        width: 150,
+                        field: 'status',
+                        type: 'text',
+                        renderer: (value) => {
+                            return "<button class='btn btn-danger' style='white-space: nowrap; color:white;'>Удалить</button>";
+                        },
+                        icon: 'glyphicon glyphicon-plus',
+                        events: {
+                            'click': deleteApplicant
                         }
                     },
                 ],
@@ -256,6 +269,30 @@ $envStatus = Setting::getClaimStatus();
                     sizes: false
                 },
             });
+
+            function deleteApplicant(e) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-Token': "{{ csrf_token() }}"
+                    }
+                });
+                if (confirm('Вы уверены, что хотите удалить запись?')) {
+                    var record = {
+                        ID_Applicant: e.data.record.ID_Applicant,
+                    };
+                    $.ajax({
+                        url: '/actions/deleteApplicant.php',
+                        data: record,
+                        method: 'POST'
+                    })
+                }
+                grids.reload({
+                    page: 1
+                });
+                grids.reload({
+                    page: 1
+                });
+            };
 
             dialog = $('#dialog').dialog({
                 autoOpen: false,

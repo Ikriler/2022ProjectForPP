@@ -118,6 +118,40 @@ class DBControl
         }
     }
 
+    function getApplicant($applicant_id) {
+        $query = "SELECT * FROM applicants WHERE ID_Applicant='$applicant_id' LIMIT 1";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        $applicant = mysqli_fetch_assoc($result);
+        return $applicant;
+    }
+
+    function deleteApplican($applicant_id) {
+        $applicant = $this->getApplicant($applicant_id);
+        $passport_id = $applicant["Passport_ID"];
+        $achievement_id = $applicant["Achievement_ID"];
+        $certificate_id = $applicant["Certificate_ID"];
+
+        //delete applicant_specialtiy
+        $query = "DELETE FROM applicants_specialties WHERE Applicant_ID='$applicant_id'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+
+        //delete applicant
+        $query = "DELETE FROM applicants WHERE ID_Applicant='$applicant_id'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        
+        //delete passport
+        $query = "DELETE FROM passports WHERE ID_Passport='$passport_id'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+
+        //delete achievement
+        $query = "DELETE FROM achievements WHERE ID_Achievement='$achievement_id'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+
+        //delete certificate
+        $query = "DELETE FROM certificates WHERE ID_Certificate ='$certificate_id'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+    }
+
     function updateApplicantStatus($id_applicant, $status_name)
     {
         $id_status = $this->getStatusByName($status_name)['ID_Status'];
