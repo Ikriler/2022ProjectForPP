@@ -36,6 +36,69 @@ $envStatus = Setting::getClaimStatus();
 
 <body class="flex-column d-flex">
     <?php include "../components/mainNavbar.php"; ?>
+    <div id="yes" style="width: 100px; height:100px;"></div>
+    <!--Start image checker  -->
+    <div id="image_dialog" class="gj-display-none">
+        <div data-role="body" id="image_place" style="height: 100%;">
+
+        </div>
+    </div>
+    <!--End image checker-->
+    <!-- Start float form -->
+    <div id="dialog" class="gj-display-none">
+        <div data-role="body">
+            <input type="hidden" id="ID" />
+            <div class="form-row">
+                <label for="d_email" class="col-sm-4 col-form-label">Email:</label>
+                <div class="col-sm-8">
+                    <input type="text" readonly class="form-control-plaintext" id="d_email" value="email@example.com">
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="d_phone" class="col-sm-4 col-form-label">Телефон:</label>
+                <div class="col-sm-8">
+                    <input type="text" readonly class="form-control-plaintext" id="d_phone" value="email@example.com">
+                </div>
+            </div>
+            <div class="form-row">
+                <input type="hidden" id="d_photo_applicant_hide_href" />
+                <label for="d_photo_applicant" class="col-sm-4 col-form-label">Фото абитуриента:</label>
+                <div class="col-sm-8">
+                    <input type="button" class="btn btn-info" style="color:white;" id="d_photo_applicant" value="Посмотреть фото">
+                </div>
+            </div>
+            <div class="form-row">
+                <input type="hidden" id="d_photo_first_scan_hide_href" />
+                <label for="d_photo_first_scan" class="col-sm-4 col-form-label">Первый скан паспорта:</label>
+                <div class="col-sm-8">
+                    <input type="button" class="btn btn-info" style="color:white;" id="d_photo_first_scan" value="Посмотреть фото">
+                </div>
+            </div>
+            <div class="form-row">
+                <input type="hidden" id="d_photo_second_scan_hide_href" />
+                <label for="d_photo_second_scan" class="col-sm-4 col-form-label">Второй скан паспорта:</label>
+                <div class="col-sm-8">
+                    <input type="button" class="btn btn-info" style="color:white;" id="d_photo_second_scan" value="Посмотреть фото">
+                </div>
+            </div>
+            <input type="hidden" id="d_photo_at_scan_hide_href" />
+            <div class="form-row">
+                <label for="d_photo_at" class="col-sm-4 col-form-label">Скан аттестата:</label>
+                <div class="col-sm-8">
+                    <input type="button" class="btn btn-info" style="color:white;" id="d_photo_at" value="Посмотреть фото">
+                </div>
+            </div>
+            <div class="form-row">
+                <input type="hidden" id="d_photo_add_at_hide_href" />
+                <label for="d_photo_add_at" class="col-sm-4 col-form-label">Скан приложения аттестата:</label>
+                <div class="col-sm-8">
+                    <input type="button" class="btn btn-info" style="color:white;" id="d_photo_add_at" value="Посмотреть фото">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End float form -->
+
     <main class="container d-flex flex-column algin-items-center justify-content-center">
         <div class="form-horizontal">
             <div class="form-group row d-flex flex-row div-bottom-mg">
@@ -74,6 +137,41 @@ $envStatus = Setting::getClaimStatus();
                 //uiLibrary: "bootstrap",
                 columns: [{
                         field: 'ID_Applicant',
+                        width: 56,
+                        hidden: true
+                    },
+                    {
+                        field: 'Email',
+                        width: 56,
+                        hidden: true
+                    },
+                    {
+                        field: 'Phone_Number',
+                        width: 56,
+                        hidden: true
+                    },
+                    {
+                        field: 'Photo',
+                        width: 56,
+                        hidden: true
+                    },
+                    {
+                        field: 'Scan_Certificate',
+                        width: 56,
+                        hidden: true
+                    },
+                    {
+                        field: 'Scan_Аpplication_Certificate',
+                        width: 56,
+                        hidden: true
+                    },
+                    {
+                        field: 'Scan_First_Passport',
+                        width: 56,
+                        hidden: true
+                    },
+                    {
+                        field: 'Scan_Second_Passport',
                         width: 56,
                         hidden: true
                     },
@@ -139,6 +237,19 @@ $envStatus = Setting::getClaimStatus();
                             'click': updateStatusCancel
                         }
                     },
+                    {
+                        title: 'Подробнее',
+                        width: 250,
+                        field: 'status',
+                        type: 'text',
+                        renderer: (value) => {
+                            return "<button class='btn btn-info' style='white-space: nowrap; color:white; width: 184px;'>Подробнее</button>";
+                        },
+                        icon: 'glyphicon glyphicon-plus',
+                        events: {
+                            'click': showDialog
+                        }
+                    },
                 ],
                 pager: {
                     limit: 7,
@@ -146,6 +257,77 @@ $envStatus = Setting::getClaimStatus();
                 },
             });
 
+            dialog = $('#dialog').dialog({
+                autoOpen: false,
+                resizable: false,
+                modal: true,
+                width: 500,
+                height: 600
+            });
+
+            image_dialog = $('#image_dialog').dialog({
+                autoOpen: false,
+                resizable: true,
+                modal: true,
+                width: 600,
+                height: 600
+            });
+            function showDialog(e) {
+                $("#d_email").val(e.data.record.Email);
+                $("#d_phone").val(e.data.record.Phone_Number);
+                $("#d_photo_applicant_hide_href").val(e.data.record.Photo);
+                $("#d_photo_first_scan_hide_href").val(e.data.record.Scan_First_Passport);
+                $("#d_photo_second_scan_hide_href").val(e.data.record.Scan_Second_Passport);
+                $("#d_photo_at_scan_hide_href").val(e.data.record.Scan_Certificate);
+                $("#d_photo_add_at_hide_href").val(e.data.record.Scan_Аpplication_Certificate);
+                dialog.open("Подробная информация");
+            }
+
+            //photo_applicant
+            $("#d_photo_applicant").on("click", function() {
+                $href = $("#d_photo_applicant_hide_href").val().replace("D:/Xampp/htdocs", "..");
+                $("#image_place").css("background-image", "url(" + $href + ")");
+                $("#image_place").css("background-size", "contain");
+                $("#image_place").css("background-repeat", "no-repeat");
+                $("#image_place").css("background-position", "center");
+                image_dialog.open("Фото абитуриента");
+            });
+            //photo_first_scan
+            $("#d_photo_first_scan").on("click", function() {
+                $href = $("#d_photo_first_scan_hide_href").val().replace("D:/Xampp/htdocs", "..");
+                $("#image_place").css("background-image", "url(" + $href + ")");
+                $("#image_place").css("background-size", "contain");
+                $("#image_place").css("background-repeat", "no-repeat");
+                $("#image_place").css("background-position", "center");
+                image_dialog.open("Первый скан пасспорта");
+            });
+            //photo_second_scan
+            $("#d_photo_second_scan").on("click", function() {
+                $href = $("#d_photo_second_scan_hide_href").val().replace("D:/Xampp/htdocs", "..");
+                $("#image_place").css("background-image", "url(" + $href + ")");
+                $("#image_place").css("background-size", "contain");
+                $("#image_place").css("background-repeat", "no-repeat");
+                $("#image_place").css("background-position", "center");
+                image_dialog.open("Второй скан пасспорта");
+            });
+            //photo_scan_at
+            $("#d_photo_at").on("click", function() {
+                $href = $("#d_photo_at_scan_hide_href").val().replace("D:/Xampp/htdocs", "..");
+                $("#image_place").css("background-image", "url(" + $href + ")");
+                $("#image_place").css("background-size", "contain");
+                $("#image_place").css("background-repeat", "no-repeat");
+                $("#image_place").css("background-position", "center");
+                image_dialog.open("Скан аттестата");
+            });
+            //photo_add_at
+            $("#d_photo_add_at").on("click", function() {
+                $href = $("#d_photo_add_at_hide_href").val().replace("D:/Xampp/htdocs", "..");
+                $("#image_place").css("background-image", "url(" + $href + ")");
+                $("#image_place").css("background-size", "contain");
+                $("#image_place").css("background-repeat", "no-repeat");
+                $("#image_place").css("background-position", "center");
+                image_dialog.open("Скан приложения аттестата");
+            });
             function updateStatusCancel(e) {
                 if (e.data.record.status != "Отклонен") {
                     $.ajaxSetup({

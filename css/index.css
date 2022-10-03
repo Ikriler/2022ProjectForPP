@@ -1,221 +1,232 @@
 #btn_login, #form_logout {
-    margin-right: 25px;
+  margin-right: 25px;
 }
 
 body {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 main {
-    flex: 1;
+  flex: 1;
 }
 
 #mainframe .form-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .login-form {
-    padding-bottom: 85px;
+  padding-bottom: 85px;
 }
 
 .div-bottom-mg {
-  margin-bottom: 20px;
+margin-bottom: 20px;
 }
 
 
 .file-upload {
-    background-color: #ffffff;
-    width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .file-upload-btn {
-    width: 100%;
-    margin: 0;
-    color: #fff;
-    background: #1FB264;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    border-bottom: 4px solid #15824B;
-    transition: all .2s ease;
-    outline: none;
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-  
-  .file-upload-btn:hover {
-    background: #1AA059;
-    color: #ffffff;
-    transition: all .2s ease;
-    cursor: pointer;
-  }
-  
-  .file-upload-btn:active {
-    border: 0;
-    transition: all .2s ease;
-  }
-  
-  .file-upload-content {
-    display: none;
-    text-align: center;
-  }
-  
-  .file-upload-input {
-    position: absolute;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    outline: none;
-    opacity: 0;
-    cursor: pointer;
-  }
-  
-  .image-upload-wrap {
-    margin-top: 20px;
-    border: 4px dashed #1FB264;
-    position: relative;
-  }
-  
-  .image-dropping,
-  .image-upload-wrap:hover {
-    background-color: #1FB264;
-    border: 4px dashed #ffffff;
-  }
-  
-  .image-title-wrap {
-    padding: 0 15px 15px 15px;
-    color: #222;
-  }
-  
-  .drag-text {
-    text-align: center;
-  }
-  
-  .drag-text h3 {
-    font-weight: 100;
-    text-transform: uppercase;
-    color: #15824B;
-    padding: 60px 0;
-  }
-  
-  .file-upload-image {
-    max-height: 200px;
-    max-width: 200px;
-    margin: auto;
-    padding: 20px;
-  }
-  
-  .remove-image {
-    width: 200px;
-    margin: 0;
-    color: #fff;
-    background: #cd4535;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    border-bottom: 4px solid #b02818;
-    transition: all .2s ease;
-    outline: none;
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-  
-  .remove-image:hover {
-    background: #c13b2a;
-    color: #ffffff;
-    transition: all .2s ease;
-    cursor: pointer;
-  }
-  
-  .remove-image:active {
-    border: 0;
-    transition: all .2s ease;
-  }
-  .checkselect {
-    position: relative;
-    display: inline-block;
-    min-width: 200px;
-    text-align: left;
-  }
-  .checkselect-control {
-    position: relative;
-    padding: 0 !important;
-  }		
-  .checkselect-control select {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    margin: 10;
-    padding-left: 5px;
-    height: 40px;
-  }
-  .checkselect-over {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0; 			
-    cursor: pointer;
-  }
-  .checkselect-popup {
-    display: none;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: auto;
-    max-height: 200px;
-    position: absolute;
-    top: 100%;
-    left: 0px; 
-    border: 1px solid #dadada;
-    border-top: none;
-    background: #fff;
-    z-index: 9999;
-    overflow: auto;
-    user-select: none;
-  }	
-  .checkselect label {
-    position: relative;
-    display: block;
-    margin: 0;
-    padding: 4px 6px 4px 25px;
-    font-weight: normal;
-    font-size: 1em;
-    line-height: 1.1;
-    cursor: pointer;
-  }			
-  .checkselect-popup input {
-    position: absolute;
-    top: 5px; 
-    left: 8px;
-    margin: 0 !important;
-    padding: 10;
-  }
-  .checkselect-popup label:hover {
-    background: #03a2ff;
-    color: #fff;
-  }
-  .checkselect-popup fieldset {
-    display: block;
-    margin:  0;
-    padding: 0;
-    border: none;
-  }
-  .checkselect-popup fieldset input {
-    left: 15px;
-  }		
-  .checkselect-popup fieldset label {
-    padding-left: 32px;
-  }		
-  .checkselect-popup legend {
-    display: block;
-    margin: 0;
-    padding: 5px 8px;
-    font-weight: 700;
-    font-size: 1em;
-    line-height: 1.1;
-  }
+  background-color: #ffffff;
+  width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.file-upload-btn {
+  width: 100%;
+  margin: 0;
+  color: #fff;
+  background: #1FB264;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  border-bottom: 4px solid #15824B;
+  transition: all .2s ease;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.file-upload-btn:hover {
+  background: #1AA059;
+  color: #ffffff;
+  transition: all .2s ease;
+  cursor: pointer;
+}
+
+.file-upload-btn:active {
+  border: 0;
+  transition: all .2s ease;
+}
+
+.file-upload-content {
+  display: none;
+  text-align: center;
+}
+
+.file-upload-input {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.image-upload-wrap {
+  margin-top: 20px;
+  border: 4px dashed #1FB264;
+  position: relative;
+}
+
+.image-dropping,
+.image-upload-wrap:hover {
+  background-color: #1FB264;
+  border: 4px dashed #ffffff;
+}
+
+.image-title-wrap {
+  padding: 0 15px 15px 15px;
+  color: #222;
+}
+
+.drag-text {
+  text-align: center;
+}
+
+.drag-text h3 {
+  font-weight: 100;
+  text-transform: uppercase;
+  color: #15824B;
+  padding: 60px 0;
+}
+
+.file-upload-image {
+  max-height: 200px;
+  max-width: 200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.remove-image {
+  width: 200px;
+  margin: 0;
+  color: #fff;
+  background: #cd4535;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  border-bottom: 4px solid #b02818;
+  transition: all .2s ease;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.remove-image:hover {
+  background: #c13b2a;
+  color: #ffffff;
+  transition: all .2s ease;
+  cursor: pointer;
+}
+
+.remove-image:active {
+  border: 0;
+  transition: all .2s ease;
+}
+.checkselect {
+  position: relative;
+  display: inline-block;
+  min-width: 200px;
+  text-align: left;
+}
+.checkselect-control {
+  position: relative;
+  padding: 0 !important;
+}		
+.checkselect-control select {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin: 10;
+  padding-left: 5px;
+  height: 40px;
+}
+.checkselect-over {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0; 			
+  cursor: pointer;
+}
+.checkselect-popup {
+  display: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  position: absolute;
+  top: 100%;
+  left: 0px; 
+  border: 1px solid #dadada;
+  border-top: none;
+  background: #fff;
+  z-index: 9999;
+  overflow: auto;
+  user-select: none;
+}	
+.checkselect label {
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 4px 6px 4px 25px;
+  font-weight: normal;
+  font-size: 1em;
+  line-height: 1.1;
+  cursor: pointer;
+}			
+.checkselect-popup input {
+  position: absolute;
+  top: 5px; 
+  left: 8px;
+  margin: 0 !important;
+  padding: 10;
+}
+.checkselect-popup label:hover {
+  background: #03a2ff;
+  color: #fff;
+}
+.checkselect-popup fieldset {
+  display: block;
+  margin:  0;
+  padding: 0;
+  border: none;
+}
+.checkselect-popup fieldset input {
+  left: 15px;
+}		
+.checkselect-popup fieldset label {
+  padding-left: 32px;
+}		
+.checkselect-popup legend {
+  display: block;
+  margin: 0;
+  padding: 5px 8px;
+  font-weight: 700;
+  font-size: 1em;
+  line-height: 1.1;
+}
+
+.form-row { display: flex; margin-bottom: 29px; }
+.form-row:last-child { margin-bottom: 0px; }
+.margin-top-10 { margin-top: 10px; }
+.float-left { float: left; }
+.float-right { float: right; }
+.display-inline { display: inline; }
+.display-inline-block { display: inline-block; }
+.width-200 { width: 200px; }
+.clear-both { clear: both; }
+.gj-display-none { display: none; }

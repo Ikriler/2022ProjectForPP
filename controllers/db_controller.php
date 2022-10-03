@@ -211,7 +211,7 @@ class DBControl
 
     function getApplicantsForTableAdmin()
     {
-        $query = "SELECT applicants.*, CONCAT(applicants.Surname, ' ', applicants.Name, ' ', applicants.Patronymic) as FIO, certificates.GPA, statuses.name as status FROM applicants LEFT JOIN certificates ON applicants.Certificate_ID = certificates.ID_Certificate LEFT JOIN statuses ON statuses.ID_Status = applicants.id_status";
+        $query = "SELECT applicants.*, CONCAT(applicants.Surname, ' ', applicants.Name, ' ', applicants.Patronymic) as FIO, certificates.GPA, certificates.*, statuses.name as status, passports.* FROM applicants LEFT JOIN certificates ON applicants.Certificate_ID = certificates.ID_Certificate LEFT JOIN passports ON passports.ID_Passport = applicants.Passport_ID LEFT JOIN statuses ON statuses.ID_Status = applicants.id_status";
 
         if(isset($_GET['FIO'])) {
             $query .= " WHERE CONCAT(applicants.Surname, ' ', applicants.Name, ' ', applicants.Patronymic) LIKE '%{$_GET['FIO']}%'";
