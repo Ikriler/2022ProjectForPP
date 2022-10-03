@@ -54,20 +54,23 @@ class DBControl
         return mysqli_insert_id($this->_connection);
     }
 
-    function getStatusByName($statusName) {
+    function getStatusByName($statusName)
+    {
         $query = "SELECT * FROM statuses WHERE name='$statusName' LIMIT 1";
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
         $status = mysqli_fetch_assoc($result);
         return $status;
     }
 
-    function createApplicantsSpecialtie($Applicant_ID, $Speciality_ID) {
+    function createApplicantsSpecialtie($Applicant_ID, $Speciality_ID)
+    {
         $query = "INSERT INTO applicants_specialties SET Applicant_ID='$Applicant_ID', Speciality_ID='$Speciality_ID'";
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
         return mysqli_insert_id($this->_connection);
     }
 
-    function getSpecialityByName($specName) {
+    function getSpecialityByName($specName)
+    {
         $query = "SELECT * FROM specialties WHERE Name='$specName' LIMIT 1";
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
         $speciality = mysqli_fetch_assoc($result);
@@ -91,7 +94,7 @@ class DBControl
         $a_Email = $firstFrame['email'];
         $a_Phone_Number = $firstFrame['phone'];
         $a_Photo = $firstFrame['photoFace'];
-        
+
         $id_status = $this->getStatusByName("В обработке")['ID_Status'];
 
         $query = "INSERT INTO applicants SET Surname='$a_Surname', Name='$a_Name', Patronymic='$a_Patronymic', Sex='$a_Sex', Birth_Date='$a_Birth_Date', Email='$a_Email', Phone_Number='$a_Phone_Number', Photo='$a_Photo', Passport_ID='$passport_id', Achievement_ID='$ahievement_id', Certificate_ID='$certificate_id', id_status='$id_status'";
@@ -100,31 +103,39 @@ class DBControl
 
         $applicant_id = mysqli_insert_id($this->_connection);
 
-        if(isset($thirdFrame['spec'])) {
-            if(is_array($thirdFrame['spec'])) {
-                foreach($thirdFrame['spec'] as $checkNum) {
+        if (isset($thirdFrame['spec'])) {
+            if (is_array($thirdFrame['spec'])) {
+                foreach ($thirdFrame['spec'] as $checkNum) {
                     $spec_id = $this->getSpecialityByName($this->specialities[$checkNum])['ID_Speciality'];
 
                     $this->createApplicantsSpecialtie($applicant_id, $spec_id);
                 }
-            }
-            else {
+            } else {
                 $spec_id = $this->getSpecialityByName($this->specialities[$thirdFrame['spec']])['ID_Speciality'];
 
                 $this->createApplicantsSpecialtie($applicant_id, $spec_id);
             }
         }
-
     }
 
-    function updateApplicantStatus($id_applicant, $status_name) {
+    function updateApplicantStatus($id_applicant, $status_name)
+    {
         $id_status = $this->getStatusByName($status_name)['ID_Status'];
         $query = "UPDATE applicants SET id_status='$id_status' WHERE ID_Applicant='$id_applicant'";
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
     }
 
+    function getArrayApplicantsIDOfSpec($specName)
+    {
+        $spec_id = $this->getSpecialityByName($specName)['ID_Speciality'];
+        $query = "SELECT * FROM applicants_specialties WHERE Speciality_ID='$spec_id'";
+        $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
+        for ($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row['Applicant_ID']);
+        return $data;
+    }
 
-    function getApplicantsForTable() {
+    function getApplicantsForTable()
+    {
         $statusCompleteId = $this->getStatusByName("Конкурс")['ID_Status'];
         $query = "SELECT applicants.*, CONCAT(applicants.Surname, ' ', applicants.Name, ' ', applicants.Patronymic) as FIO, certificates.GPA FROM applicants LEFT JOIN certificates ON applicants.Certificate_ID = certificates.ID_Certificate WHERE applicants.id_status='$statusCompleteId'";
 
@@ -132,108 +143,143 @@ class DBControl
             $query .= " AND CONCAT(applicants.Surname, ' ', applicants.Name, ' ', applicants.Patronymic) LIKE '%{$_GET['FIO']}%'";
         }
 
-        if(isset($_GET["sortBy"])) {
+        if (isset($_GET["sortBy"])) {
             $query .= " ORDER BY {$_GET["sortBy"]}";
-            if(isset($_GET["direction"])) {
+            if (isset($_GET["direction"])) {
                 $query .= " {$_GET["direction"]}";
             }
-        }
-        else {
+        } else {
             $query .= " ORDER BY GPA DESC";
         }
 
-
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
-        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        for ($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
 
+        if (!isset($_GET['spec'])) {
+            $_GET['spec'] = "Информационные системы и программирование";
+        }
+
+        $applicantsIDOfSpec = $this->getArrayApplicantsIDOfSpec($_GET['spec']);
+        $countData = count($data);
+        for ($i = 0; $i < $countData; $i++) {
+            if (!in_array($data[$i]["ID_Applicant"], $applicantsIDOfSpec)) {
+                unset($data[$i]);
+            }
+        }
+        
         //Номер в конкурсе
 
-        $query2 =  "SELECT applicants.*, CONCAT(applicants.Surname, ' ', applicants.Name, ' ', applicants.Patronymic) as FIO, certificates.GPA FROM applicants LEFT JOIN certificates ON applicants.Certificate_ID = certificates.ID_Certificate WHERE applicants.id_status='$statusCompleteId' ORDER BY GPA DESC";
+        $query2 =  "SELECT applicants.*, CONCAT(applicants.Surname, ' ', applicants.Name, ' ', applicants.Patronymic) as FIO, certificates.GPA FROM applicants LEFT JOIN certificates ON applicants.Certificate_ID = certificates.ID_Certificate WHERE applicants.id_status='$statusCompleteId'";
+
+        $query2 .= " ORDER BY GPA DESC";
 
         $result2 = mysqli_query($this->_connection, $query2) or die(mysqli_error($this->_connection));
-        for($data2 = []; $row2 = mysqli_fetch_assoc($result2); $data2[] = $row2);
+        for ($data2 = []; $row2 = mysqli_fetch_assoc($result2); $data2[] = $row2);
 
-        for($i = 0; $i < count($data); $i++) {
-            for($j = 0; $j < count($data2); $j++) {
-                if($data[$i]['ID_Applicant'] == $data2[$j]['ID_Applicant']) {
+        $countData2 = count($data2);
+        for ($i = 0; $i < $countData2; $i++) {
+            if (!in_array($data2[$i]["ID_Applicant"], $applicantsIDOfSpec)) {
+                unset($data2[$i]);
+            }
+        }
+
+        $data = array_values($data);
+        $data2 = array_values($data2);
+
+        for ($i = 0; $i < count($data); $i++) {
+            for ($j = 0; $j < count($data2); $j++) {
+                if ($data[$i]['ID_Applicant'] == $data2[$j]['ID_Applicant']) {
                     $data[$i]['row_number'] = $j + 1;
+                    break;
                 }
             }
         }
 
         //Номер в конкурсе;
 
+        $countData = count($data);
+        for($i = 0; $i < $countData; $i++) {
+            if(!isset($data[$i]["row_number"])) {
+                unset($data[$i]);
+            }
+        }
+
         return $data;
     }
 
 
-    
-    function getApplicantsForTableAdmin() {
+
+    function getApplicantsForTableAdmin()
+    {
         $query = "SELECT applicants.*, certificates.GPA, statuses.name as status FROM applicants LEFT JOIN certificates ON applicants.Certificate_ID = certificates.ID_Certificate LEFT JOIN statuses ON statuses.ID_Status = applicants.id_status";
 
-        if(isset($_GET["sortBy"])) {
+        if (isset($_GET["sortBy"])) {
             $query .= " ORDER BY {$_GET["sortBy"]}";
-            if(isset($_GET["direction"])) {
+            if (isset($_GET["direction"])) {
                 $query .= " {$_GET["direction"]}";
             }
-        }
-        else {
+        } else {
             $query .= " ORDER BY GPA DESC";
         }
 
 
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
-        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        for ($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
         return $data;
     }
 
 
-    function checkAuth($login, $password) {
+    function checkAuth($login, $password)
+    {
         $query = "SELECT * FROM employees WHERE Login='$login' AND Password='$password'";
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
-        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
-        if(count($data) == 0) {
+        for ($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        if (count($data) == 0) {
             return false;
         }
         return true;
     }
 
 
-    function checkHasEmail($email) {
+    function checkHasEmail($email)
+    {
         $query = "SELECT * FROM applicants WHERE email='$email'";
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
-        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
-        if(count($data) == 0) {
+        for ($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        if (count($data) == 0) {
             return false;
         }
         return true;
     }
 
-    function checkHasPhone($phone) {
+    function checkHasPhone($phone)
+    {
         $query = "SELECT * FROM applicants WHERE Phone_Number='$phone'";
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
-        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
-        if(count($data) == 0) {
+        for ($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        if (count($data) == 0) {
             return false;
         }
         return true;
     }
 
-    function checkHasCertificateNumber($number) {
+    function checkHasCertificateNumber($number)
+    {
         $query = "SELECT * FROM certificates WHERE Number='$number'";
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
-        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
-        if(count($data) == 0) {
+        for ($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        if (count($data) == 0) {
             return false;
         }
         return true;
     }
 
-    function checkHasPassport($pass_seria, $pass_number) {
+    function checkHasPassport($pass_seria, $pass_number)
+    {
         $query = "SELECT * FROM passports WHERE Series='$pass_seria' AND Number='$pass_number'";
         $result = mysqli_query($this->_connection, $query) or die(mysqli_error($this->_connection));
-        for($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
-        if(count($data) == 0) {
+        for ($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);
+        if (count($data) == 0) {
             return false;
         }
         return true;
@@ -241,5 +287,3 @@ class DBControl
 }
 
 $DB = new DBControl(getenv("DB_HOST"), getenv("DB_USER"), getenv("DB_PASS"), getenv("DB_NAME"));
-
-?>

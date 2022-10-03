@@ -31,6 +31,11 @@ require_once "../controllers/settings_controller.php";
     <?php include "../components/mainNavbar.php"; ?>
     <main class="container d-flex flex-column algin-items-center justify-content-center">
         <div class="from-horizontal abilist-form">
+            <div class="p-3 d-flex flex-row">
+                <div class="col-sm-8"></div>
+                <span class="error text-success col-sm-2 text-center" id="budgetCount">Бюждетных мест: 1000</span>
+                <span class="error text-warning col-sm-2 text-center" id="commercCount">Коммерческих мест: 1000</span>
+            </div>
             <div class="form-group row d-flex flex-row div-bottom-mg">
                 <label for="" class="col-sm-1 col-form-label">ФИО:</label>
                 <div class="col-sm-3">
@@ -42,6 +47,14 @@ require_once "../controllers/settings_controller.php";
                 <div class="col-sm-1">
                     <buttion id="clear_btn" type="button" class="btn btn-primary" value="Очистить">Очистить</buttion>
                 </div>
+                <label for="" class="col-sm-2 col-form-label">Специальность:</label>
+                <div class="form-group row col-sm-4">
+                    <select name="" id="spec_select" class="form-control">
+                        <option value="Информационные системы и программирование">Информационные системы и программирование</option>
+                        <option value="Сетевое и системное администрирование">Сетевое и системное администрирование</option>
+                        <option value="Компьютерные системы и комплексы">Компьютерные системы и комплексы</option>
+                    </select>
+                </div>
             </div>
             <table id="claims">
             </table>
@@ -50,16 +63,55 @@ require_once "../controllers/settings_controller.php";
     </main>
 
     <?php include "../components/mainFooter.php"; ?>
-
+    <script src="../js/droplist.js"></script>
     <script src="../bootstrap/bootstrap.js"></script>
     <script>
+        var BudgetCount, CommetcCount;
+        function getDataForSpec() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/actions/getDataSpec.php?spec=' + $("#spec_select").val(), true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState != 4) {
+                    return;
+                }
+                var Speciality = JSON.parse(xhr.responseText)
+
+                BudgetCount = Speciality.Budget_Places_Count;
+                CommetcCount = Speciality.NonBudget_Places_Count;
+
+                $('#budgetCount').text("Бюждетных мест: " + BudgetCount);
+                $('#commercCount').text("Коммерческих мест: " + CommetcCount);
+
+                if (xhr.status === 200) {
+                    console.log('result', xhr.responseText)
+                } else {
+                    console.log('err', xhr.responseText)
+                }
+            }
+            xhr.send();
+        }
+
         $(document).ready(function() {
+            getDataForSpec();
             grids = $('#claims').grid({
                 primaryKey: 'ID_Applicant',
                 dataSource: "/actions/getApplicants.php",
                 columns: [{
                         field: 'row_number',
                         title: "Место в конкурсе",
+                        renderer: (value) => {
+                            style = "text-warning";
+
+                            if(value <= BudgetCount) {
+                                style = "text-success";
+                            }
+
+                            if(value > CommetcCount) {
+                                style = "text-danger";
+                            }
+
+                            return "<span class='error "+style+" text-center'>"+value+"</span>";
+                        },
                     },
                     {
                         field: 'FIO',
@@ -89,6 +141,13 @@ require_once "../controllers/settings_controller.php";
                     page: 1,
                     FIO: ''
                 });
+            });
+            $("#spec_select").on('change', function() {
+                grids.reload({
+                    page: 1,
+                    spec: $("#spec_select").val()
+                });
+                getDataForSpec();
             });
         });
     </script>

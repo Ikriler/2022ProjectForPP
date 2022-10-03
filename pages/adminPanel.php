@@ -139,9 +139,13 @@ $envStatus = Setting::getClaimStatus();
                         data: record,
                         method: 'POST'
                     })
-                    grids.reload();
                 }
+                grids.reload();
             };
+
+            function getNumsForSpec() {
+                
+            }
 
             $("span:contains('Rows per page:')").css("display", "none");
         });
