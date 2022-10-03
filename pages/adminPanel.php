@@ -36,10 +36,23 @@ $envStatus = Setting::getClaimStatus();
 
 <body class="flex-column d-flex">
     <?php include "../components/mainNavbar.php"; ?>
-    <main class="container d-flex flex-column algin-items-center">
-
-        <table id="claims">
-        </table>
+    <main class="container d-flex flex-column algin-items-center justify-content-center">
+        <div class="form-horizontal">
+            <div class="form-group row d-flex flex-row div-bottom-mg">
+                <label for="" class="col-sm-1 col-form-label">ФИО:</label>
+                <div class="col-sm-3">
+                    <input id="search_text" type="text" class="form-control" name="">
+                </div>
+                <div class="col-sm-1">
+                    <buttion id="search_btn" type="button" class="btn btn-primary" value="Поиск">Поиск</buttion>
+                </div>
+                <div class="col-sm-1">
+                    <buttion id="clear_btn" type="button" class="btn btn-primary" value="Очистить">Очистить</buttion>
+                </div>
+            </div>
+            <table id="claims">
+            </table>
+        </div>
 
         <div class="p-5 mr-auto d-flex flex-row align-items-stretch">
             <form action="../actions/changeClaimStatus.php" method="POST">
@@ -65,19 +78,9 @@ $envStatus = Setting::getClaimStatus();
                         hidden: true
                     },
                     {
-                        field: 'Surname',
+                        field: 'FIO',
                         sortable: true,
-                        title: "Фамилия"
-                    },
-                    {
-                        field: 'Name',
-                        sortable: true,
-                        title: "Имя"
-                    },
-                    {
-                        field: 'Patronymic',
-                        sortable: true,
-                        title: "Отчество"
+                        title: "ФИО"
                     },
                     {
                         field: 'GPA',
@@ -100,6 +103,8 @@ $envStatus = Setting::getClaimStatus();
 
                             switch (value) {
                                 case "Отклонен":
+                                    strForBtn = "Отправить на конкурс";
+                                    break;
                                 case "В обработке":
                                     strForBtn = "Отправить на конкурс";
                                     break;
@@ -116,12 +121,57 @@ $envStatus = Setting::getClaimStatus();
                             'click': updateStatus
                         }
                     },
+                    {
+                        title: 'Отклонить',
+                        width: 250,
+                        field: 'status',
+                        type: 'text',
+                        renderer: (value) => {
+                            style = "";
+                            if (value == "Отклонен") {
+                                style = "disabled";
+                            }
+
+                            return "<button class='btn btn-danger' " + style + " style='white-space: nowrap; width: 184px;'>Отклонить</button>";
+                        },
+                        icon: 'glyphicon glyphicon-plus',
+                        events: {
+                            'click': updateStatusCancel
+                        }
+                    },
                 ],
                 pager: {
                     limit: 7,
                     sizes: false
                 },
             });
+
+            function updateStatusCancel(e) {
+                if (e.data.record.status != "Отклонен") {
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-Token': "{{ csrf_token() }}"
+                        }
+                    });
+                    if (confirm('Вы уверены?')) {
+                        var record = {
+                            ID_Applicant: e.data.record.ID_Applicant,
+                            status: "Конкурс",
+                        };
+                        $.ajax({
+                            url: '/actions/updateStatusApplicant.php',
+                            data: record,
+                            method: 'POST'
+                        })
+                    }
+                    grids.reload({
+                        page: 1
+                    });
+                    grids.reload({
+                        page: 1
+                    });
+                }
+            };
 
             function updateStatus(e) {
                 $.ajaxSetup({
@@ -140,14 +190,28 @@ $envStatus = Setting::getClaimStatus();
                         method: 'POST'
                     })
                 }
-                grids.reload();
+                grids.reload({
+                    page: 1
+                });
+                grids.reload({
+                    page: 1
+                });
             };
 
-            function getNumsForSpec() {
-                
-            }
-
             $("span:contains('Rows per page:')").css("display", "none");
+            $("#search_btn").on('click', function() {
+                grids.reload({
+                    page: 1,
+                    FIO: $('#search_text').val()
+                });
+            });
+            $("#clear_btn").on('click', function() {
+                $("#search_text").val('');
+                grids.reload({
+                    page: 1,
+                    FIO: ''
+                });
+            });
         });
     </script>
 </body>

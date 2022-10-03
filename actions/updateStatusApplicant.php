@@ -9,12 +9,12 @@ if(!isset($_SESSION['auth']) || $_SESSION['auth'] != true) {
     exit();
 }
 
-echo 1;
-
 $nextStatus = "";
 
 switch($_POST['status']) {
     case "Отклонен":
+        $nextStatus = "Конкурс";
+        break;
     case "В обработке":
         $nextStatus = "Конкурс";
         break;
